@@ -9,7 +9,7 @@ public class Scene1 : MonoBehaviour {
 	void Start () {
         //DrawTriangle();
         //DrawSquare();
-        DrawCircle(Vector3.zero,1,40);
+        //DrawCircle(Vector3.zero,1,180);
     }
 	
 	
@@ -83,7 +83,7 @@ public class Scene1 : MonoBehaviour {
             int vIndex2 = i + 1 % side;
             triangles[t0] = vertices.Count - 1;
             triangles[t1] = i % side;
-            triangles[t2] = i + 1 % side;
+            triangles[t2] = (i + 1) % side;
         }
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles;     
