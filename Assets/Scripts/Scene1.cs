@@ -8,7 +8,8 @@ public class Scene1 : MonoBehaviour {
 
 	void Start () {
         //DrawTriangle();
-        DrawSquare();
+        //DrawSquare();
+        DrawCircle(Vector3.zero,1,4);
     }
 	
 	
@@ -16,7 +17,9 @@ public class Scene1 : MonoBehaviour {
 		
 	}
 
-
+    /// <summary>
+    /// 画三角型
+    /// </summary>
     void DrawTriangle()
     {
         GameObject go = new GameObject("Triangle");
@@ -32,6 +35,9 @@ public class Scene1 : MonoBehaviour {
        
     }
 
+    /// <summary>
+    /// 画正方形()
+    /// </summary>
     void DrawSquare()
     {
         GameObject go = new GameObject("Triangle");
@@ -46,12 +52,31 @@ public class Scene1 : MonoBehaviour {
         MF.mesh = mesh;
     }
 
+    /// <summary>
+    /// 画圆
+    /// </summary>
+    /// <param name="coc"></param>
+    /// <param name="radius"></param>
+    /// <param name="side"></param>
     void DrawCircle(Vector3 coc,float radius,int side)
     {
         List<Vector3> vertices = new List<Vector3>();
         for (int i = 0; i < side; i++)
         {
+            float angle = (2*Mathf.PI / side) * i;
+            Vector3 pointOfSide = new Vector3(radius * Mathf.Cos(angle) + coc.x, radius * Mathf.Sin(angle) + coc.y, 0);
+            vertices.Add(pointOfSide);
+        }
+        GameObject go = new GameObject("Triangle");
+        MeshRenderer MR = go.AddComponent<MeshRenderer>();
+        MeshFilter MF = go.AddComponent<MeshFilter>();
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices.ToArray();
+        int[] triangles = new int[side * 3];
+        for (int i = 0; i < side*3; i=i+3)
+        {
 
         }
+
     }
 }
