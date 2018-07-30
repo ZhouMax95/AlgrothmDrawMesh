@@ -9,7 +9,7 @@ public class Scene1 : MonoBehaviour {
 	void Start () {
         //DrawTriangle();
         //DrawSquare();
-        DrawCircle(Vector3.zero,1,4);
+        DrawCircle(Vector3.zero,1,40);
     }
 	
 	
@@ -67,16 +67,27 @@ public class Scene1 : MonoBehaviour {
             Vector3 pointOfSide = new Vector3(radius * Mathf.Cos(angle) + coc.x, radius * Mathf.Sin(angle) + coc.y, 0);
             vertices.Add(pointOfSide);
         }
+        vertices.Add(coc);
         GameObject go = new GameObject("Triangle");
         MeshRenderer MR = go.AddComponent<MeshRenderer>();
         MeshFilter MF = go.AddComponent<MeshFilter>();
-        Mesh mesh = new Mesh();
-        mesh.vertices = vertices.ToArray();
+        Mesh mesh = new Mesh();  
         int[] triangles = new int[side * 3];
-        for (int i = 0; i < side*3; i=i+3)
+        for (int i = 0; i < side;i++)
         {
+            int t0 = i * 3 + 0;
+            int t1 = i * 3 + 1;
+            int t2 = i * 3 + 2;
 
+            int vIndex1 = i % side;
+            int vIndex2 = i + 1 % side;
+            triangles[t0] = vertices.Count - 1;
+            triangles[t1] = i % side;
+            triangles[t2] = i + 1 % side;
         }
-
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles;     
+        MF.mesh = mesh;
+        MR.material = material;
     }
 }
