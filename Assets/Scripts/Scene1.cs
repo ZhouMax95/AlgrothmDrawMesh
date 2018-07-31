@@ -9,15 +9,12 @@ public class Scene1 : MonoBehaviour {
 	void Start () {
         //DrawTriangle();
         //DrawSquare();
-        //DrawCircle(Vector3.zero,1,6);
-        DrawAnnulus(Vector3.zero, 1f, 3f, 15);
+        //DrawCircle(Vector3.zero,1,37);
+        //DrawAnnulus(Vector3.zero, 1f, 3f, 15);
         //DrawCube();
+        //DrawOctahedron();
+        DrawCentrum(25, 2, 1.5f);
     }
-	
-	
-	void Update () {
-		
-	}
 
     /// <summary>
     /// 画三角型
@@ -208,6 +205,79 @@ public class Scene1 : MonoBehaviour {
         MF.mesh.vertices = Vertices;
         MF.mesh.triangles = triangle;
         MR.material = material;
+    }
+
+    /// <summary>
+    /// 画八面体
+    /// </summary>
+    void DrawOctahedron()
+    {
+        Vector3[] vertices = { Vector3.forward, Vector3.right, Vector3.back, Vector3.left, Vector3.up, Vector3.down };
+        List<int> triangles = new List<int>();
+        for (int i = 0; i < 4; i++)
+        {
+            int t0 = i % 4;
+            int t1 = (i + 1) % 4;
+
+            triangles.Add(t0);
+            triangles.Add(t1);
+            triangles.Add(vertices.Length-2);
+
+            triangles.Add(t0);
+            triangles.Add(vertices.Length - 1);
+            triangles.Add(t1);
+        }
+        GameObject go = new GameObject("octahedron");
+        go.AddComponent<MeshRenderer>().material=material;
+        MeshFilter MF =  go.AddComponent<MeshFilter>();
+        MF.mesh.vertices = vertices;
+        MF.mesh.triangles = triangles.ToArray();
+
+    }
+
+    /// <summary>
+    /// 画椎体
+    /// </summary>
+    /// <param name="side">边的个数</param>
+    /// <param name="high">上下高度</param>
+    void DrawCentrum(int side,float high,float radius)
+    {
+        List<Vector3> vertices = new List<Vector3>();
+        for (int i = 0; i < side; i++)
+        {
+            float angle = Mathf.PI * 2 / side * i;
+            Vector3 point = new Vector3(Mathf.Sin(angle) * radius, 0, Mathf.Cos(angle) * radius);
+            vertices.Add(point);
+        }
+        vertices.Add(new Vector3(0, high, 0));
+        vertices.Add(new Vector3(0,-high,0));
+        List<int> triangles = new List<int>();
+        for (int i = 0; i < side; i++)
+        {
+            int t0 = i % side;
+            int t1 = (i + 1) % side;
+
+            triangles.Add(t0);
+            triangles.Add(t1);
+            triangles.Add(vertices.Count - 2);
+
+            triangles.Add(t0);
+            triangles.Add(vertices.Count - 1);
+            triangles.Add(t1);
+        }
+        GameObject go = new GameObject("octahedron");
+        go.AddComponent<MeshRenderer>().material = material;
+        MeshFilter MF = go.AddComponent<MeshFilter>();
+        MF.mesh.vertices = vertices.ToArray();
+        MF.mesh.triangles = triangles.ToArray();
+    }
+
+    /// <summary>
+    /// 画球体
+    /// </summary>
+    void DrawSphere()
+    {
+
     }
 
 }
