@@ -13,7 +13,8 @@ public class Scene1 : MonoBehaviour {
         //DrawAnnulus(Vector3.zero, 1f, 3f, 15);
         //DrawCube();
         //DrawOctahedron();
-        DrawCentrum(25, 2, 1.5f);
+        //DrawCentrum(25, 2, 1.5f);
+        StartCoroutine(PlaneSink());
     }
 
     /// <summary>
@@ -277,6 +278,83 @@ public class Scene1 : MonoBehaviour {
     /// </summary>
     void DrawSphere()
     {
+
+    }
+
+    /// <summary>
+    /// 地板下陷
+    /// </summary>
+    IEnumerator PlaneSink()
+    {
+        GameObject go = new GameObject("sinkObj");
+        MeshRenderer MR = go.AddComponent<MeshRenderer>();
+        MeshFilter MF = go.AddComponent<MeshFilter>();
+
+        Vector3[] vertices = new Vector3[8];
+        List<int> triangle = new List<int>();
+        float r = 1;
+        float angle = Mathf.PI * 2 / 4;
+        Vector3 center = Vector3.zero;
+        Vector3 v0 = new Vector3(r * Mathf.Cos(angle * 0), 0, r * Mathf.Sin(angle * 0));
+        Vector3 v1 = new Vector3(r * Mathf.Cos(angle * 1), 0, r * Mathf.Sin(angle * 1));
+        Vector3 v2 = new Vector3(r * Mathf.Cos(angle * 2), 0, r * Mathf.Sin(angle * 2));
+        Vector3 v3 = new Vector3(r * Mathf.Cos(angle * 3), 0, r * Mathf.Sin(angle * 3));
+        vertices[0] = v0;
+        vertices[1] = v1;
+        vertices[2] = v2;
+        vertices[3] = v3;
+        vertices[4] = v0;
+        vertices[5] = v1;
+        vertices[6] = v2;
+        vertices[7] = v3;
+        for (int i = 0; i < 4; i++)
+        {
+            int t0 = i % 4;
+            int t1 = (i + 1) % 4;
+            int t2 = (i + 1) % 4 + 4;
+            int t3 = i % 4 + 4;
+
+            triangle.Add(t0);
+            triangle.Add(t1);
+            triangle.Add(t2);
+            triangle.Add(t0);
+            triangle.Add(t2);
+            triangle.Add(t3);
+            if (i==3)
+            {
+                int t0d = 0 % 4 + 4;
+                int t1d = (0 + 1) % 4 + 4;
+                int t2d = (0 + 2) % 4 + 4;
+                int t3d = (0 + 3) % 4 + 4;
+
+                triangle.Add(t0d);
+                triangle.Add(t1d);
+                triangle.Add(t2d);
+                triangle.Add(t0d);
+                triangle.Add(t2d);
+                triangle.Add(t3d);
+            }
+
+        }
+        
+        MF.mesh.vertices = vertices;
+        MF.mesh.triangles = triangle.ToArray();
+        MR.material = material;
+
+        while (true)
+        {
+            yield return new WaitForSeconds(0.03f);
+            vertices[4] = new Vector3(v0.x, vertices[4].y - 0.01f, v0.z);
+            vertices[5] = new Vector3(v1.x, vertices[5].y - 0.01f, v1.z);
+            vertices[6] = new Vector3(v2.x, vertices[6].y - 0.01f, v2.z);
+            vertices[7] = new Vector3(v3.x, vertices[7].y - 0.01f, v3.z);
+
+            MF.mesh.vertices = vertices;
+            MF.mesh.triangles = triangle.ToArray();
+            MR.material = material;
+
+        }
+
 
     }
 
